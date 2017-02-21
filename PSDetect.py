@@ -12,13 +12,13 @@ import time
 from scapy.all import *
 sniffed = {'0':[0,0]}
 startTime = 0
-
+#find own IP so you aren't worried about outgoing connections
 def getMyIP():
   s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
   s.connect(("8.8.8.8", 80))
   return s.getsockname()[0]
 
-
+#looks through all attempted connections to the computer
 def ip_callback(packet):
   global startTime
   global sniffed
@@ -41,6 +41,6 @@ def ip_callback(packet):
       startTime=time.time()
 
 
-
+#runs sniff to continuously check on the attempted connections
 startTime = time.time()
 sniff(prn=ip_callback, filter="tcp and not src net " + getMyIP())

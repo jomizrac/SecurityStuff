@@ -29,7 +29,7 @@ authkey = ""
 confkey = ""
 ###########
 
-
+#parses the command line arguments
 def parse_arguments():
   parser = argparse.ArgumentParser(description = 'A P2P IM service.')
   parser.add_argument('-c', dest='connect', metavar='HOSTNAME', type=str,
@@ -42,7 +42,7 @@ def parse_arguments():
   parser.add_argument('-authkey', metavar='mykey', type=str)
   parser.add_argument('-confkey', metavar='akey',type=str)
   return parser.parse_args()
-
+#message that prints if program is run with incorrect command line arguments
 def print_how_to():
   print "This program must be run with exactly ONE of the following options"
   print "-c <HOSTNAME> -confkey <K1> -authkey <K2> : to connect to <HOSTNAME> on tcp port 9999"
@@ -58,7 +58,7 @@ def sigint_handler(signal, frame):
     s.close()
 
   quit()
-
+#program init, makes the connections, uses HMACs for secure key transfer
 def init():
   global s
   global authkey
@@ -110,7 +110,7 @@ def init():
     hAS.update(sys.argv[5])
     authkey = hAS.hexdigest()[0:32]
 
-
+#main method, does the encryption, sending, receiving, and decryption of messages
 def main():
   global s
   datalen=64

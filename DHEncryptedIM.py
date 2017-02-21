@@ -30,7 +30,7 @@ confkey = 0;
 logger = logging.getLogger('main')
 ###########
 
-
+#checks to see if command line arguments are written correctly
 def parse_arguments():
   parser = argparse.ArgumentParser(description = 'A P2P IM service.')
   parser.add_argument('-c', dest='connect', metavar='HOSTNAME', type=str,
@@ -42,7 +42,7 @@ def parse_arguments():
     help = 'For testing purposes - allows use of different port')
 
   return parser.parse_args()
-
+#message that prints if program is run with incorrect command line arguments
 def print_how_to():
   print "This program must be run with exactly ONE of the following options"
   print "-c <HOSTNAME>  : to connect to <HOSTNAME> on tcp port 9999"
@@ -59,7 +59,7 @@ def sigint_handler(signal, frame):
 
   quit()
   
-
+#init for program, connects to client/server and runs Diffie-Hellman
 def init(crypt):
   global s
   global confkey
@@ -84,7 +84,7 @@ def init(crypt):
   #hash key and take first 128 bits (=16 bytes)
 
 
-  if args.connect is not None:
+  if args.connect is not None: #this is the client
     iv=os.urandom(32)
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     logger.debug('Connecting to ' + args.connect + ' ' + str(args.port))
@@ -101,7 +101,7 @@ def init(crypt):
     crypt['confout']=AES.new(confkey, AES.MODE_CBC, iv[:16])
     crypt['confin']=AES.new(confkey, AES.MODE_CBC, iv[16:])
 
-  if args.server is not False:
+  if args.server is not False: #this is the server
     global server_s
     server_s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server_s.bind(('', args.port))
@@ -141,7 +141,7 @@ def decodemessage(data,crypt):
   data = crypt['confin'].decrypt(data)
   data = data[16:16+int(data[:16])]
   return data
-
+#main method, does the actual encoding, sending, receiving, and decoding of messages
 def main():
   global confkey
   global s

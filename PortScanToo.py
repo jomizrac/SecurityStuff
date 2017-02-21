@@ -10,7 +10,7 @@ import logging
 import signal #To kill the programs nicely
 import time
 
-
+#attempts to make connections to the entered target's ports in order to find an open one.
 s = None
 
 
